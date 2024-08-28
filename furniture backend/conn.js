@@ -1,21 +1,18 @@
-const mongoose = require("mongoose")
-require("dotenv").config()
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-mongoose.connect(process.env.URL);
-mongoose.connection.on('connected', () => console.log('connected'));
+mongoose.connect('mongodb://localhost:27017/mydatabase', { useNewUrlParser: true, useUnifiedTopology: true })
+
 
 const { Schema } = mongoose;
 const contactSchema = new Schema({
-    firstName: String,
-    lastName: String,
-    email: String,
-    message: String
+  firstName: { type: String, required: true },
+  lastName: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  message: { type: String, required: true }
 });
+
+// Create a model from the schema
 const Contact = mongoose.model('Contact', contactSchema);
 
-
-module.exports = {Contact}
-
-
-
-
+module.exports = { Contact };
