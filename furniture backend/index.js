@@ -3,7 +3,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT||8000
 const cors = require("cors")
-const { Contact } = require("./conn.js")
+const { Contact,Order} = require("./conn.js")
 const bodyParser = require('body-parser')
 app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
@@ -74,6 +74,15 @@ app.post('/contact/insert', async (req, res) => {
     const newContact = await Contact.create(data)
     const ContactData = await newContact.save()
     res.json({ data: "", message: "Data inserted successfully" })
+})
+
+app.post('/checkout/insert', async(req,res)=>{
+let data=req.body;
+console.log(data); 
+const newOrder=await Order.create(data)
+const OrderData=await newOrder.save()
+res.json({data:"",message:"order create a succesfully"})
+
 })
 
 app.listen(port, () => {

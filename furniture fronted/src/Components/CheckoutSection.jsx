@@ -1,7 +1,36 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { json, Link, useNavigate } from "react-router-dom";
 
 function CheckoutSection() {
+  let [formdata,setformdata]= useState({country:"India",firstname:"manish",lastname:"solanki",companyName:"XYZ",address:"jaipur",state:"Rajasthan",Zip:"302028",email:"manish@gmail.com",phoneNo:"9878459898",Notes:"helo every one"})
+  let nevigate=useNavigate()
+
+  let[cartdata,setcartdata]=useState(JSON.parse(localStorage.getItem('cartData'))||[])
+
+
+  const handlechange=(e)=>{
+  
+    const {name,value} = e.target;
+     let data = {...formdata,[name]:value}
+      setformdata(data)
+}
+const handlesubmit= async()=>{
+  const response = await fetch("http://localhost:8000/checkout/insert", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({formdata,cartdata}),
+  })
+  const jsonResponse = await response.json();
+  console.log(jsonResponse);
+  window.alert(jsonResponse["message"])
+  localStorage.removeItem("cartData")
+  nevigate("/thankyou") 
+
+  
+}
+
   return (
     <>
       <div className="untree_co-section">
@@ -21,16 +50,20 @@ function CheckoutSection() {
                   <label htmlFor="c_country" className="text-black">
                     Country <span className="text-danger">*</span>
                   </label>
-                  <select id="c_country" className="form-control">
-                    <option value={1}>Select a country</option>
-                    <option value={2}>bangladesh</option>
-                    <option value={3}>Algeria</option>
-                    <option value={4}>Afghanistan</option>
-                    <option value={5}>Ghana</option>
-                    <option value={6}>Albania</option>
-                    <option value={7}>Bahrain</option>
-                    <option value={8}>Colombia</option>
-                    <option value={9}>Dominican Republic</option>
+                  <select id="c_country" className="form-control" value={formdata["country"]} name="country"  onChange={(e)=>handlechange(e)}>
+                    
+                    <option value={""}>Select a country</option>
+                    <option value={"India"}>India</option>
+                    <option value={"bangladesh"}>bangladesh</option>
+                    <option value={"Algeria"}>Algeria</option>
+                    <option value={"Afghanistan"}>Afghanistan</option>
+                    <option value={"Ghana"}>Ghana</option>
+                    <option value={"Albania"}>Albania</option>
+                    <option value={"Bahrain"}>Bahrain</option>
+                    <option value={"Colombia"}>Colombia</option>
+                    <option value={"Dominican Republic"}>Dominican Republic</option>
+
+                    
                   </select>
                 </div>
                 <div className="form-group row">
@@ -39,10 +72,13 @@ function CheckoutSection() {
                       First Name <span className="text-danger">*</span>
                     </label>
                     <input
+                   
                       type="text"
                       className="form-control"
                       id="c_fname"
-                      name="c_fname"
+                      name="firstname"
+                      onChange={(e)=>handlechange(e)}
+                      value={formdata["firstname"]}
                     />
                   </div>
                   <div className="col-md-6">
@@ -50,10 +86,12 @@ function CheckoutSection() {
                       Last Name <span className="text-danger">*</span>
                     </label>
                     <input
+                     onChange={(e)=>handlechange(e)}
+                    value={formdata["lastname"]}
                       type="text"
                       className="form-control"
                       id="c_lname"
-                      name="c_lname"
+                      name="lastname"
                     />
                   </div>
                 </div>
@@ -63,10 +101,12 @@ function CheckoutSection() {
                       Company Name{" "}
                     </label>
                     <input
+                    value={formdata["companyName"]}
                       type="text"
                       className="form-control"
                       id="c_companyname"
-                      name="c_companyname"
+                      name="companyName"
+                      onChange={(e)=>handlechange(e)}
                     />
                   </div>
                 </div>
@@ -76,31 +116,35 @@ function CheckoutSection() {
                       Address <span className="text-danger">*</span>
                     </label>
                     <input
+                    value={formdata["address"]}
                       type="text"
                       className="form-control"
                       id="c_address"
-                      name="c_address"
+                      name="address"
                       placeholder="Street address"
+                      onChange={(e)=>handlechange(e)}
                     />
                   </div>
                 </div>
-                <div className="form-group mt-3">
+                {/* <div className="form-group mt-3">
                   <input
                     type="text"
                     className="form-control"
                     placeholder="Apartment, suite, unit etc. (optional)"
                   />
-                </div>
+                </div> */}
                 <div className="form-group row">
                   <div className="col-md-6">
                     <label htmlFor="c_state_country" className="text-black">
                       State / Country <span className="text-danger">*</span>
                     </label>
                     <input
+                    value={formdata["state"]}
                       type="text"
                       className="form-control"
                       id="c_state_country"
-                      name="c_state_country"
+                      name="state"
+                      onChange={(e)=>handlechange(e)}
                     />
                   </div>
                   <div className="col-md-6">
@@ -108,10 +152,12 @@ function CheckoutSection() {
                       Posta / Zip <span className="text-danger">*</span>
                     </label>
                     <input
+                    value={formdata["Zip"]}
                       type="text"
                       className="form-control"
                       id="c_postal_zip"
-                      name="c_postal_zip"
+                      name="Zip"
+                      onChange={(e)=>handlechange(e)}
                     />
                   </div>
                 </div>
@@ -121,10 +167,12 @@ function CheckoutSection() {
                       Email Address <span className="text-danger">*</span>
                     </label>
                     <input
+                    value={formdata["email"]}
                       type="text"
                       className="form-control"
                       id="c_email_address"
-                      name="c_email_address"
+                      name="email"
+                      onChange={(e)=>handlechange(e)}
                     />
                   </div>
                   <div className="col-md-6">
@@ -132,15 +180,17 @@ function CheckoutSection() {
                       Phone <span className="text-danger">*</span>
                     </label>
                     <input
+                    value={formdata["phoneNo"]}
                       type="text"
                       className="form-control"
                       id="c_phone"
-                      name="c_phone"
+                      name="phoneNo"
                       placeholder="Phone Number"
+                      onChange={(e)=>handlechange(e)}
                     />
                   </div>
                 </div>
-                <div className="form-group">
+                {/* <div className="form-group">
                   <label
                     htmlFor="c_create_account"
                     className="text-black"
@@ -181,8 +231,8 @@ function CheckoutSection() {
                       </div>
                     </div>
                   </div>
-                </div>
-                <div className="form-group">
+                </div> */}
+                {/* <div className="form-group">
                   <label
                     htmlFor="c_ship_different_address"
                     className="text-black"
@@ -342,19 +392,21 @@ function CheckoutSection() {
                       </div>
                     </div>
                   </div>
-                </div>
+                </div> */}
                 <div className="form-group">
                   <label htmlFor="c_order_notes" className="text-black">
                     Order Notes
                   </label>
                   <textarea
-                    name="c_order_notes"
+                  value={formdata["Notes"]}
+                    name="Notes"
                     id="c_order_notes"
                     cols={30}
                     rows={5}
                     className="form-control"
                     placeholder="Write your notes here..."
                     defaultValue={""}
+                    onChange={(e)=>handlechange(e)}
                   />
                 </div>
               </div>
@@ -504,12 +556,13 @@ function CheckoutSection() {
                     <div className="form-group">
                       <button
                         className="btn btn-black btn-lg py-3 btn-block"
-                        onClick="window.location='thankyou.html'"
+                        // onClick="window.location='thankyou.html'" 
+                        onClick={()=>handlesubmit()}
                       >
-                        <Link to="/thankyou" className="text-white">
+                        <span className="text-white" >
                         
                         Place Order
-                        </Link>
+                        </span>
                       </button>
                     </div>
                   </div>

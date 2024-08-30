@@ -5,6 +5,12 @@ import Hy from "./hy";
 
 function CartPage() {
   let [cartData, setCartData] = useState(JSON.parse(localStorage.getItem("cartData"))||[]);
+  let[cartsum,setcartsum]= useState(0)
+
+  for(let i=0;i<cartData.length;i++){
+    cartsum+=cartData[i].productPrice
+
+  }
   
   return (
     <>
@@ -82,7 +88,7 @@ function CartPage() {
                       <span className="text-black">Subtotal</span>
                     </div>
                     <div className="col-md-6 text-right">
-                      <strong className="text-black">$230.00</strong>
+                      <strong className="text-black">${cartsum}</strong>
                     </div>
                   </div>
                   <div className="row mb-5">
@@ -90,7 +96,7 @@ function CartPage() {
                       <span className="text-black">Total</span>
                     </div>
                     <div className="col-md-6 text-right">
-                      <strong className="text-black">$230.00</strong>
+                      <strong className="text-black">${cartsum}</strong>
                     </div>
                   </div>
                   <div className="row">
